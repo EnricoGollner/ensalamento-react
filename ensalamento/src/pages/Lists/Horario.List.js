@@ -7,114 +7,122 @@ import {
   Button,
   Form,
   Card,
-  Modal,
+  Modal
 } from "react-bootstrap";
 
-const Desafios = () => {
-  const [listaDesafios, setListaDesafios] = useState([]);
-  const [desafio, setDesafio] = useState({
-    desafio: "",
-    professor: "",
-    curso: "",
-    periodo: "",
-    id: 0,
-  });
+const Horario = () => {
+  const [listaHorarios, setListaHorarios] = useState([]);
+  const [horario, setHorario] = useState({ horario: "", sala: "", professor: "", curso: "", periodo: "", id: 0 });
   const [modeForm, setModeForm] = useState("create");
   const [listaPeriodo, setListaPeriodo] = useState([]);
   const [listaCursos, setListaCursos] = useState([]);
+  const [listaSalas, setListaSalas] = useState([]);
   const [listaProfessores, setListaProfessores] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const objStr = localStorage.getItem("lDesafio");
+    const objStr = localStorage.getItem("lHorario");
     const objLista = JSON.parse(objStr);
-    setListaDesafios(objLista || []);
-
-    const listaProfessorAux =
-      localStorage.lProfessor === undefined
-        ? []
-        : JSON.parse(localStorage.lProfessor);
-    setListaProfessores(listaProfessorAux || []);
-
-    const listaCursoAux =
-      localStorage.lCurso === undefined ? [] : JSON.parse(localStorage.lCurso);
-    setListaCursos(listaCursoAux || []);
+    setListaHorarios(objLista || []);
 
     const listaPeriodosAux =
       localStorage.lPeriodo === undefined
         ? []
         : JSON.parse(localStorage.lPeriodo);
     setListaPeriodo(listaPeriodosAux || []);
+
+    const listaCursosAux =
+      localStorage.lCurso === undefined
+        ? []
+        : JSON.parse(localStorage.lCurso);
+    setListaCursos(listaCursosAux || []);
+
+    const listaSalasAux =
+      localStorage.lSala === undefined
+        ? []
+        : JSON.parse(localStorage.lSala);
+    setListaSalas(listaSalasAux || []);
+
+    const listaProfAux =
+      localStorage.lProfessor === undefined
+        ? []
+        : JSON.parse(localStorage.lProfessor);
+    setListaProfessores(listaProfAux || []);
   }, []);
 
   const onSave = () => {
     if (modeForm === "create") {
-      desafio.id = listaDesafios.length + 1;
-      listaDesafios.push(desafio);
-      setListaDesafios([...listaDesafios]);
+      horario.id = listaHorarios.length + 1;
+      listaHorarios.push(horario);
+      setListaHorarios([...listaHorarios]);
     }
 
     if (modeForm === "edit") {
-      const desafioAux = listaDesafios.find((p) => p.id === desafio.id);
-      desafioAux.desafio = desafio.desafio;
-      desafioAux.professor = desafio.professor;
-      desafioAux.curso = desafio.curso;
-      desafioAux.periodo = desafio.periodo;
-      setListaDesafios([...listaDesafios]);
+      const horarioAux = listaHorarios.find((p) => p.id === horario.id);
+      horarioAux.horario = horario.horario;
+      horarioAux.sala = horario.sala;
+      horarioAux.curso = horario.curso;
+      horarioAux.periodo = horario.periodo;
+      horarioAux.professor = horario.professor;
+      setListaHorarios([...listaHorarios]);
     }
-    localStorage.setItem("lDesafio", JSON.stringify(listaDesafios));
+    localStorage.setItem("lHorario", JSON.stringify(listaHorarios));
     onNew();
   };
 
-  const onEdit = (desafioAux) => {
-    setDesafio(desafioAux);
+  const onEdit = (horarioAux) => {
+    setHorario(horarioAux);
     setModeForm("edit");
     setShowModal(true);
   };
 
   const onNew = () => {
     setModeForm("create");
-    setDesafio({ desafio: "", professor: "", curso: "", periodo: "" });
+    setHorario({ horario: "", sala: "", professor: "", curso: "", periodo: "" });
     setShowModal(false);
   };
 
   const onRemove = (pRemove) => {
-    const updatedList = listaDesafios.filter((p) => p.id !== pRemove.id);
-    setListaDesafios(updatedList);
-    localStorage.setItem("lDesafio", JSON.stringify(updatedList));
+    const updatedList = listaHorarios.filter((p) => p.id !== pRemove.id);
+    setListaHorarios(updatedList);
+    localStorage.setItem("lHorario", JSON.stringify(updatedList));
   };
 
   const onCancel = () => {
     onNew();
   };
 
-  const handleProfChange = (event) => {
-    setDesafio({ ...desafio, professor: event.target.value });
+  const handlePeriodoChange = (event) => {
+    setHorario({ ...horario, periodo: event.target.value });
   };
 
   const handleCursoChange = (event) => {
-    setDesafio({ ...desafio, curso: event.target.value });
+    setHorario({ ...horario, curso: event.target.value });
   };
 
-  const handlePeriodoChange = (event) => {
-    setDesafio({ ...desafio, periodo: event.target.value });
+  const handleProfChange = (event) => {
+    setHorario({ ...horario, professor: event.target.value });
+  };
+
+  const handleSalaChange = (event) => {
+    setHorario({ ...horario, sala: event.target.value });
   };
 
   return (
     <Container>
       <br />
       <Row>
-        <h1>Desafios</h1>
+        <h1>Horarios</h1>
       </Row>
       <Row>
         <Col>
           <Card>
             <Card.Header>
-              <h4>Cadastro de Desafios</h4>
+              <h4>Cadastro de Horarios</h4>
             </Card.Header>
             <Card.Body>
               <Button variant="primary" onClick={() => setShowModal(true)}>
-                Novo Desafio
+                Novo Horario
               </Button>
             </Card.Body>
           </Card>
@@ -122,7 +130,7 @@ const Desafios = () => {
       </Row>
       <br />
       <Row>
-        <h4>Lista de Desafios:</h4>
+        <h4>Lista de Horarios:</h4>
       </Row>
       <Row>
         <Col>
@@ -130,25 +138,27 @@ const Desafios = () => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Desafio</th>
+                <th>Curso</th>
                 <th>Professor</th>
+                <th>Sala</th>
                 <th>Curso</th>
                 <th>Período</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {listaDesafios.map((desafioAux) => (
-                <tr key={desafioAux.id}>
-                  <td>{desafioAux.id}</td>
-                  <td>{desafioAux.desafio}</td>
-                  <td>{desafioAux.professor}</td>
-                  <td>{desafioAux.curso}</td>
-                  <td>{desafioAux.periodo}° Período</td>
-                  <td class="editButtons">
+              {listaHorarios.map((horarioAux) => (
+                <tr key={horarioAux.id}>
+                  <td>{horarioAux.id}</td>
+                  <td>{horarioAux.horario}</td>
+                  <td>{horarioAux.professor}</td>
+                  <td>{horarioAux.sala}</td>
+                  <td>{horarioAux.curso}</td>
+                  <td>{horarioAux.periodo}º Período</td>
+                  <td>
                     <Button
                       onClick={() => {
-                        onEdit(desafioAux);
+                        onEdit(horarioAux);
                       }}
                       variant="primary"
                     >
@@ -156,7 +166,7 @@ const Desafios = () => {
                     </Button>
                     <Button
                       onClick={() => {
-                        onRemove(desafioAux);
+                        onRemove(horarioAux);
                       }}
                       variant="danger"
                     >
@@ -173,31 +183,31 @@ const Desafios = () => {
       {/* Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Cadastro de Desafios</Modal.Title>
+          <Modal.Title>Cadastro de Horarios</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="formDesafio">
-              <Form.Label>Desafio:</Form.Label>
+            <Form.Group className="mb-3" controlId="Horário">
+              <Form.Label>Horário:</Form.Label>
               <Form.Control
                 required
-                value={desafio.desafio}
+                value={horario.horario}
                 onChange={({ target }) => {
-                  setDesafio({ ...desafio, desafio: target.value });
+                  setHorario({ ...horario, horario: target.value });
                 }}
-                type="text"
-                placeholder="Insira aqui o nome do desafio"
+                type="time"
+                placeholder="Insira o Horário aqui"
               />
             </Form.Group>
 
             <Form.Label>Professor:</Form.Label>
             <Form.Group className="mb-3" controlId="formSalas">
               <Form.Select
-                aria-label="Selecione o professor que dará o desafio"
-                value={desafio.professor}
+                aria-label="Selecione o professor que dará a aula"
+                value={horario.professor}
                 onChange={handleProfChange}
               >
-                <option value="">Selecione o professor que dará o desafio</option>
+                <option value="">Selecione o professor que dará a aula</option>
                 {listaProfessores.map((prof) => (
                   <option key={prof.id} value={prof.name}>
                     {prof.name}
@@ -206,14 +216,30 @@ const Desafios = () => {
               </Form.Select>
             </Form.Group>
 
+            <Form.Label>Sala:</Form.Label>
+            <Form.Group className="mb-3" controlId="formSalas">
+              <Form.Select
+                aria-label="Selecione a sala"
+                value={horario.sala}
+                onChange={handleSalaChange}
+              >
+                <option value="">Selecione a sala que será utilizada</option>
+                {listaSalas.map((sala) => (
+                  <option key={sala.id} value={sala.sala}>
+                    Sala {sala.sala}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
             <Form.Label>Curso:</Form.Label>
             <Form.Group className="mb-3" controlId="formCursos">
               <Form.Select
-                aria-label="Selecione o curso do desafio"
-                value={desafio.curso}
+                aria-label="Selecione a curso que usará a sala"
+                value={horario.curso}
                 onChange={handleCursoChange}
               >
-                <option value="">Selecione o curso do desafio</option>
+                <option value="">Selecione a curso ficará na sala</option>
                 {listaCursos.map((curso) => (
                   <option key={curso.id} value={curso.curso}>
                     {curso.curso}
@@ -226,7 +252,7 @@ const Desafios = () => {
             <Form.Group className="mb-3" controlId="formPeriodo">
               <Form.Select
                 aria-label="Selecione o periodo que usará a sala"
-                value={desafio.periodo}
+                value={horario.periodo}
                 onChange={handlePeriodoChange}
               >
                 <option value="">Selecione o periodo que usará a sala</option>
@@ -251,5 +277,4 @@ const Desafios = () => {
   );
 };
 
-export default Desafios;
-
+export default Horario;
