@@ -25,6 +25,22 @@ code {
   color: #e0e0e0;
 }
 
+.active {
+  color: #e30613 !important;
+}
+
 .addButton {
-  border: 5px solid #e0e0e0;
+  border: 5px solid #eeeeee !important;
+}
+
+.homeContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+.editButtons {
+  display: flex;
+  gap: 7px;
 }

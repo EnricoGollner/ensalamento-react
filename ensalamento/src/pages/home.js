@@ -2,14 +2,11 @@ import { Row, Container } from "react-bootstrap";
 
 const Home = () =>{
     return(<>
-        <Container>
+        <Container className="homeContainer">
         <Row>
-            <h1>Bem-vindo ao sistema de ensalamento!</h1>
+            <center><h1>Bem-vindo ao sistema de ensalamento!</h1></center>
         </Row>
         <br/>
-        <Row>
-            <h1></h1>
-        </Row>
         </Container>
     </>)
 }
