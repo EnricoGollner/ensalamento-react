@@ -67,7 +67,7 @@ const Periodos = () => {
             </Card.Header>
             <Card.Body>
               <Container>
-                <Button variant="success" onClick={() => setShowModal(true)}>
+                <Button variant="primary" onClick={() => setShowModal(true)}>
                   Novo Período
                 </Button>
               </Container>

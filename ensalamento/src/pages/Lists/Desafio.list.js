@@ -6,17 +6,24 @@ import {
   Col,
   Button,
   Form,
-  Card
+  Card,
+  Modal,
 } from "react-bootstrap";
 
 const Desafios = () => {
   const [listaDesafios, setListaDesafios] = useState([]);
-  const [desafio, setDesafio] = useState({ desafio: "", professor: "", curso: "", periodo: "", id: 0 });
+  const [desafio, setDesafio] = useState({
+    desafio: "",
+    professor: "",
+    curso: "",
+    periodo: "",
+    id: 0,
+  });
   const [modeForm, setModeForm] = useState("create");
   const [listaPeriodo, setListaPeriodo] = useState([]);
   const [listaCursos, setListaCursos] = useState([]);
   const [listaProfessores, setListaProfessores] = useState([]);
-
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const objStr = localStorage.getItem("lDesafio");
@@ -30,9 +37,7 @@ const Desafios = () => {
     setListaProfessores(listaProfessorAux || []);
 
     const listaCursoAux =
-      localStorage.lCurso === undefined
-        ? []
-        : JSON.parse(localStorage.lCurso);
+      localStorage.lCurso === undefined ? [] : JSON.parse(localStorage.lCurso);
     setListaCursos(listaCursoAux || []);
 
     const listaPeriodosAux =
@@ -40,9 +45,7 @@ const Desafios = () => {
         ? []
         : JSON.parse(localStorage.lPeriodo);
     setListaPeriodo(listaPeriodosAux || []);
-
   }, []);
-
 
   const onSave = () => {
     if (modeForm === "create") {
@@ -66,11 +69,13 @@ const Desafios = () => {
   const onEdit = (desafioAux) => {
     setDesafio(desafioAux);
     setModeForm("edit");
+    setShowModal(true);
   };
 
   const onNew = () => {
     setModeForm("create");
     setDesafio({ desafio: "", professor: "", curso: "", periodo: "" });
+    setShowModal(false);
   };
 
   const onRemove = (pRemove) => {
@@ -108,85 +113,9 @@ const Desafios = () => {
               <h4>Cadastro de Desafios</h4>
             </Card.Header>
             <Card.Body>
-              <Container>
-                <Form>
-                  <Form.Group className="mb-3" controlId="formDesafio">
-                    <Form.Label>Desafio:</Form.Label>
-                    <Form.Control
-                      required
-                      value={desafio.desafio}
-                      onChange={({ target }) => {
-                        setDesafio({ ...desafio, desafio: target.value });
-                      }}
-                      type="text"
-                      placeholder="Insira aqui o nome do desafio"
-                    />
-                  </Form.Group>
-
-
-                  <Form.Label>Professor:</Form.Label>
-                  <Form.Group className="mb-3" controlId="formSalas">
-                    <Form.Select
-                      aria-label="Selecione o professor que dará o desafio"
-                      value={desafio.professor}
-                      onChange={handleProfChange}
-                    >
-                      <option value="">Selecione o professor que dará o desafio</option>
-                      {
-                        listaProfessores.map((prof) => (
-                        <option key={prof.id} value={prof.name}>
-                          {prof.name}
-                        </option>
-                      ))
-                      }
-                    </Form.Select>
-                  </Form.Group>
-
-                  <Form.Label>Curso:</Form.Label>
-                  <Form.Group className="mb-3" controlId="formCursos">
-                    <Form.Select
-                      aria-label="Selecione o curso do desafio"
-                      value={desafio.curso}
-                      onChange={handleCursoChange}
-                    >
-                      <option value="">Selecione o curso do desafio</option>
-                      {
-                        listaCursos.map((curso) => (
-                          <option key={curso.id} value={curso.curso}>
-                            {curso.curso}
-                          </option>
-                        ))
-                      }
-                    </Form.Select>
-                  </Form.Group>
-
-                 
-                  <Form.Label>Período:</Form.Label>
-                  <Form.Group className="mb-3" controlId="formPeriodo">
-                    <Form.Select
-                      aria-label="Selecione o periodo que usará a sala"
-                      value={desafio.periodo}
-                      onChange={handlePeriodoChange}
-                    >
-                      <option value="">Selecione o periodo que usará a sala</option>
-                      {
-                        listaPeriodo.map((periodo) => (
-                          <option key={periodo.id} value={periodo.periodo}>
-                            {periodo.periodo}º Período
-                          </option>
-                        ))
-                      }
-                    </Form.Select>
-                  </Form.Group>
-
-                  <Button variant="success" onClick={onSave}>
-                    Salvar
-                  </Button>{" "}
-                  <Button variant="danger" onClick={onCancel}>
-                    Cancelar
-                  </Button>
-                </Form>
-              </Container>
+              <Button variant="primary" onClick={() => setShowModal(true)}>
+                Novo Desafio
+              </Button>
             </Card.Body>
           </Card>
         </Col>
@@ -216,7 +145,7 @@ const Desafios = () => {
                   <td>{desafioAux.professor}</td>
                   <td>{desafioAux.curso}</td>
                   <td>{desafioAux.periodo}° Período</td>
-                  <td >
+                  <td class="editButtons">
                     <Button
                       onClick={() => {
                         onEdit(desafioAux);
@@ -240,6 +169,84 @@ const Desafios = () => {
           </Table>
         </Col>
       </Row>
+
+      {/* Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Cadastro de Desafios</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="formDesafio">
+              <Form.Label>Desafio:</Form.Label>
+              <Form.Control
+                required
+                value={desafio.desafio}
+                onChange={({ target }) => {
+                  setDesafio({ ...desafio, desafio: target.value });
+                }}
+                type="text"
+                placeholder="Insira aqui o nome do desafio"
+              />
+            </Form.Group>
+
+            <Form.Label>Professor:</Form.Label>
+            <Form.Group className="mb-3" controlId="formSalas">
+              <Form.Select
+                aria-label="Selecione o professor que dará o desafio"
+                value={desafio.professor}
+                onChange={handleProfChange}
+              >
+                <option value="">Selecione o professor que dará o desafio</option>
+                {listaProfessores.map((prof) => (
+                  <option key={prof.id} value={prof.name}>
+                    {prof.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Label>Curso:</Form.Label>
+            <Form.Group className="mb-3" controlId="formCursos">
+              <Form.Select
+                aria-label="Selecione o curso do desafio"
+                value={desafio.curso}
+                onChange={handleCursoChange}
+              >
+                <option value="">Selecione o curso do desafio</option>
+                {listaCursos.map((curso) => (
+                  <option key={curso.id} value={curso.curso}>
+                    {curso.curso}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Label>Período:</Form.Label>
+            <Form.Group className="mb-3" controlId="formPeriodo">
+              <Form.Select
+                aria-label="Selecione o período que usará a sala"
+                value={desafio.periodo}
+                onChange={handlePeriodoChange}
+              >
+                <option value="">Selecione o período que usará a sala</option>
+                {listaPeriodo.map((periodo) => (
+                  <option key={periodo.id} value={periodo.periodo}>
+                    {periodo.periodo}º Período
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Button variant="success" onClick={onSave}>
+              Salvar
+            </Button>{" "}
+            <Button variant="danger" onClick={onCancel}>
+              Cancelar
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };

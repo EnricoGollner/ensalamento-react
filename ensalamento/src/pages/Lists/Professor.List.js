@@ -64,7 +64,7 @@ const Professor = () => {
             </Card.Header>
             <Card.Body>
               <Container>
-                <Button variant="success" onClick={onNew}>
+                <Button variant="primary" onClick={onNew}>
                   Novo Professor
                 </Button>
               </Container>
